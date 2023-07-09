@@ -10,6 +10,7 @@ import io.codelex.flightplanner.flights.request.SearchFlightRequest;
 import io.codelex.flightplanner.flights.response.SearchFlightsResponse;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -106,6 +107,7 @@ public class FlightsService {
         List<Flight> flights = this.flightsRepository.listFlights().stream()
                 .filter(f -> f.getFrom().getAirport().equalsIgnoreCase(searchFlightRequest.getFrom()))
                 .filter(f -> f.getTo().getAirport().equalsIgnoreCase(searchFlightRequest.getTo()))
+                .filter(f -> f.getDepartureTime().toLocalDate().isEqual(LocalDate.parse(searchFlightRequest.getDepartureDate(),DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
                 .toList();
         return new SearchFlightsResponse(flights.size(), flights.size(), flights.toArray(Flight[]::new));
     }

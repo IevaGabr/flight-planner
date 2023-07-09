@@ -1,9 +1,15 @@
 package io.codelex.flightplanner.flights.request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class SearchFlightRequest {
+    @NotBlank
     private String from;
+    @NotBlank
     private String to;
-    private String departureTime;
+    @NotNull
+    private String departureDate;
 
     public SearchFlightRequest() {
     }
@@ -24,11 +30,11 @@ public class SearchFlightRequest {
         this.to = to;
     }
 
-    public String getDepartureTime() {
-        return departureTime;
+    public String getDepartureDate() {
+        return departureDate;
     }
 
-    public void setDepartureTime(String departureTime) {
-        this.departureTime = departureTime;
+    public void setDepartureDate(String departureDate) {
+        this.departureDate = departureDate;
     }
 }

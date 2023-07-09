@@ -64,10 +64,10 @@ public class FlightsController {
 
     @PostMapping("/api/flights/search")
     @ResponseStatus(HttpStatus.OK)
-    public SearchFlightsResponse searchFlights (@RequestBody SearchFlightRequest searchFlightRequest){
+    public SearchFlightsResponse searchFlights (@Valid @RequestBody SearchFlightRequest searchFlightRequest){
         try {
             return this.flightsService.searchFlights(searchFlightRequest);
-        } catch (DepartureAndArrivalAirportAreTheSameException| NullPointerException e) {
+        } catch (DepartureAndArrivalAirportAreTheSameException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
     }

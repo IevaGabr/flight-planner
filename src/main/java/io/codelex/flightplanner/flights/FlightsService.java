@@ -27,16 +27,11 @@ public class FlightsService {
     }
 
     public Flight addFlight(AddFlightRequest addFlightRequest) throws DepartureAndArrivalAirportAreTheSameException, IllegalArgumentException, FlightAlreadyExistException, NullPointerException {
-        if (addFlightRequest.getFrom().getAirport().equalsIgnoreCase(addFlightRequest.getTo().getAirport().trim()) &&
-                addFlightRequest.getFrom().getCity().equalsIgnoreCase(addFlightRequest.getTo().getCity().trim()) &&
-                addFlightRequest.getFrom().getCountry().equalsIgnoreCase(addFlightRequest.getTo().getCountry().trim())) {
+        if (addFlightRequest.isAirportFromAndToEqual()) {
             throw new DepartureAndArrivalAirportAreTheSameException("Departure and arrival airport are  the same!");
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        if (LocalDateTime.parse(addFlightRequest.getArrivalTime(), formatter)
-                .isBefore(LocalDateTime.parse(addFlightRequest.getDepartureTime(), formatter))
-                || LocalDateTime.parse(addFlightRequest.getArrivalTime(), formatter)
-                .isEqual(LocalDateTime.parse(addFlightRequest.getDepartureTime(), formatter))) {
+        if (!addFlightRequest.isCorrectArrivalTime()) {
             throw new IllegalArgumentException();
         }
         synchronized (this) {
@@ -84,17 +79,13 @@ public class FlightsService {
                 .map(Flight::getFrom)
                 .toList()
                 .stream()
-                .filter(a -> a.getAirport().toLowerCase().contains(phrase.toLowerCase().trim())
-                        || a.getCity().toLowerCase().contains(phrase.toLowerCase().trim())
-                        || a.getCountry().toLowerCase().contains(phrase.toLowerCase().trim()))
+                .filter(a -> a.containsText(phrase))
                 .toList();
         List<Airport> airportsTo = this.flightsRepository.listFlights().stream()
                 .map(Flight::getTo)
                 .toList()
                 .stream()
-                .filter(a -> a.getAirport().toLowerCase().contains(phrase.toLowerCase().trim())
-                        || a.getCity().toLowerCase().contains(phrase.toLowerCase().trim())
-                        || a.getCountry().toLowerCase().contains(phrase.toLowerCase().trim()))
+                .filter(a -> a.containsText(phrase))
                 .toList();
         return Stream.concat(airportsFrom.stream(), airportsTo.stream())
                 .toList();
@@ -109,6 +100,6 @@ public class FlightsService {
                 .filter(f -> f.getTo().getAirport().equalsIgnoreCase(searchFlightRequest.getTo()))
                 .filter(f -> f.getDepartureTime().toLocalDate().isEqual(LocalDate.parse(searchFlightRequest.getDepartureDate(),DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
                 .toList();
-        return new SearchFlightsResponse(flights.size(), flights.size(), flights.toArray(Flight[]::new));
+        return new SearchFlightsResponse(flights.size(), flights.size(), flights);
     }
 }

@@ -21,6 +21,13 @@ public class Airport {
         this.airport = airport;
     }
 
+    public boolean containsText(String text){
+        String textToSearch = text.trim().toLowerCase();
+        return this.airport.toLowerCase().contains(textToSearch)
+                || this.city.toLowerCase().contains(textToSearch)
+                || this.country.toLowerCase().contains(textToSearch);
+    }
+
     public String getCountry() {
         return country;
     }

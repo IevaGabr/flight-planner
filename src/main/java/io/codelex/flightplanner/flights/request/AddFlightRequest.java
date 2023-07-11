@@ -33,6 +33,17 @@ public class AddFlightRequest {
         this.arrivalTime = arrivalTime.format(formatter);
     }
 
+    public boolean isAirportFromAndToEqual() {
+        return this.from.getAirport().trim().equalsIgnoreCase(this.to.getAirport().trim()) &&
+                this.from.getCity().trim().equalsIgnoreCase(this.to.getCity().trim()) &&
+                this.from.getCountry().trim().equalsIgnoreCase(this.to.getCountry().trim());
+    }
+
+    public boolean isCorrectArrivalTime() {
+        return LocalDateTime.parse(this.arrivalTime, formatter)
+                .isAfter(LocalDateTime.parse(this.departureTime, formatter));
+    }
+
     public AddFlightRequest() {
     }
 

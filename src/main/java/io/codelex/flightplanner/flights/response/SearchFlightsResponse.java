@@ -2,12 +2,14 @@ package io.codelex.flightplanner.flights.response;
 
 import io.codelex.flightplanner.flights.domain.Flight;
 
+import java.util.List;
+
 public class SearchFlightsResponse {
 private int page;
 private int totalItems;
-private Flight[] items;
+private List<Flight> items;
 
-    public SearchFlightsResponse(int page, int totalItems, Flight[] items) {
+    public SearchFlightsResponse(int page, int totalItems, List<Flight> items) {
         this.page = page;
         this.totalItems = totalItems;
         this.items = items;
@@ -29,11 +31,11 @@ private Flight[] items;
         this.totalItems = totalItems;
     }
 
-    public Flight[] getItems() {
+    public List<Flight> getItems() {
         return items;
     }
 
-    public void setItems(Flight[] items) {
+    public void setItems(List<Flight> items) {
         this.items = items;
     }
 }

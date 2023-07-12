@@ -3,7 +3,7 @@ package io.codelex.flightplanner.flights.domain;
 import java.time.LocalDateTime;
 
 public class Flight {
-private int id;
+private long id;
 private Airport from;
 private Airport to;
 private String carrier;
@@ -15,7 +15,7 @@ private LocalDateTime arrivalTime;
     public Flight() {
     }
 
-    public Flight(int id, Airport from, Airport to, String carrier, LocalDateTime departureTime, LocalDateTime arrivalTime) {
+    public Flight(long id, Airport from, Airport to, String carrier, LocalDateTime departureTime, LocalDateTime arrivalTime) {
         this.id = id;
         this.from = from;
         this.to = to;
@@ -24,11 +24,11 @@ private LocalDateTime arrivalTime;
         this.arrivalTime = arrivalTime;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

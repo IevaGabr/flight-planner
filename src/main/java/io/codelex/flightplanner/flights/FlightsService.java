@@ -44,7 +44,7 @@ public class FlightsService {
                 .anyMatch(f -> f.getArrivalTime().isEqual(LocalDateTime.parse(addFlightRequest.getArrivalTime(), formatter)))) {
             throw new FlightAlreadyExistException("Flight already exists!");
         }
-            Flight flight = new Flight(this.flightsRepository.listFlights().stream().mapToInt(Flight::getId).max().orElse(0) + 1,
+            Flight flight = new Flight(this.flightsRepository.listFlights().stream().mapToLong(Flight::getId).max().orElse(0) + 1,
                     addFlightRequest.getFrom(),
                     addFlightRequest.getTo(),
                     addFlightRequest.getCarrier(),

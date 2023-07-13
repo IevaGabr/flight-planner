@@ -95,11 +95,6 @@ public class FlightsService {
         if (searchFlightRequest.getFrom().equalsIgnoreCase(searchFlightRequest.getTo())) {
             throw new DepartureAndArrivalAirportAreTheSameException("Departure and arrival airport are  the same!");
         }
-        List<Flight> flights = this.flightsRepository.listFlights().stream()
-                .filter(f -> f.getFrom().getAirport().equalsIgnoreCase(searchFlightRequest.getFrom()))
-                .filter(f -> f.getTo().getAirport().equalsIgnoreCase(searchFlightRequest.getTo()))
-                .filter(f -> f.getDepartureTime().toLocalDate().isEqual(LocalDate.parse(searchFlightRequest.getDepartureDate(),DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
-                .toList();
-        return new SearchFlightsResponse(flights.size(), flights.size(), flights);
+        return this.flightsRepository.searchFlights(searchFlightRequest);
     }
 }

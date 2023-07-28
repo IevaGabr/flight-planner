@@ -1,43 +1,29 @@
 package io.codelex.flightplanner.flights;
 
+import io.codelex.flightplanner.flights.domain.Airport;
 import io.codelex.flightplanner.flights.domain.Flight;
-import io.codelex.flightplanner.flights.request.SearchFlightRequest;
-import io.codelex.flightplanner.flights.response.SearchFlightsResponse;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 
-@Repository
-public class FlightsRepository {
-    private List<Flight> savedFlights = new ArrayList<>();
+public interface FlightsRepository extends JpaRepository<Flight, Long> {
 
-    public void saveFlight(Flight flight) {
-        this.savedFlights.add(flight);
-    }
+    boolean existsByCarrierAndFromAndToAndDepartureTimeAndArrivalTime(String carrier,
+                                                                      Airport from,
+                                                                      Airport to,
+                                                                      LocalDateTime arrivalTime,
+                                                                      LocalDateTime departureTime);
 
-    public List<Flight> listFlights() {
-        return this.savedFlights;
-    }
+    Flight searchFlightByFromAndToAndCarrierAndDepartureTimeAndArrivalTime(Airport from,
+                                                                           Airport to,
+                                                                           String carrier,
+                                                                           LocalDateTime arrivalTime,
+                                                                           LocalDateTime departureTime);
 
-    public void deleteFlight(int id) {
-        for (Flight flight:this.savedFlights) {
-            if (flight.getId()==id){
-                savedFlights.remove(flight);
-                break;
-            }
-        }
-    }
-
-    public SearchFlightsResponse searchFlights(SearchFlightRequest searchFlightRequest){
-        List<Flight> flights = listFlights().stream()
-                .filter(f -> f.getFrom().getAirport().equalsIgnoreCase(searchFlightRequest.getFrom()))
-                .filter(f -> f.getTo().getAirport().equalsIgnoreCase(searchFlightRequest.getTo()))
-                .filter(f -> f.getDepartureTime().toLocalDate().isEqual(LocalDate.parse(searchFlightRequest.getDepartureDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
-                .toList();
-        return new SearchFlightsResponse(flights.size(), flights.size(), flights);
-    }
-
+    @Query("SELECT f FROM Flight f WHERE f.from.airport like ('%' || :from || '%') and f.to.airport like ('%' || :to || '%') and Date(f.departureTime)=  :depDate")
+    List<Flight> searchFlights(@Param("from") String from, @Param("to") String to, @Param("depDate") LocalDate departureDate);
 }

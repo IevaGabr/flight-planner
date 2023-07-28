@@ -1,7 +1,7 @@
 package io.codelex.flightplanner;
 
 import io.codelex.flightplanner.flights.FlightsController;
-import io.codelex.flightplanner.flights.FlightsRepository;
+import io.codelex.flightplanner.flights.FlightsInMemoryRepository;
 import io.codelex.flightplanner.flights.domain.Airport;
 import io.codelex.flightplanner.flights.domain.Flight;
 import io.codelex.flightplanner.flights.request.AddFlightRequest;
@@ -21,7 +21,7 @@ class FlightPlannerApplicationTests {
     @Autowired
     FlightsController flightsController;
     @Autowired
-    FlightsRepository flightsRepository;
+    FlightsInMemoryRepository flightsInMemoryRepository;
 
 
     private final Airport from = new Airport("Latvia", "Riga", "RIX");
@@ -29,15 +29,16 @@ class FlightPlannerApplicationTests {
     private final LocalDateTime departureTime = LocalDateTime.of(2023, 7, 13, 7, 0);
     private final LocalDateTime arrivalTime = departureTime.plusHours(3);
     private final String carrier = "AirBaltic";
+
     @Test
     @DisplayName("Should be able add flight")
     void canAddFlight() throws Exception {
-        int countSavedFlights = flightsRepository.listFlights().size();
+        int countSavedFlights = flightsInMemoryRepository.listFlights().size();
         AddFlightRequest addFlightRequest = new AddFlightRequest(from, to, carrier, departureTime, arrivalTime);
 
         Flight savedFlight = flightsController.addFlight(addFlightRequest);
 
-        assertTrue(countSavedFlights < flightsRepository.listFlights().size());
+        assertTrue(countSavedFlights < flightsInMemoryRepository.listFlights().size());
 
         assertNotNull(savedFlight.getId());
         assertEquals(savedFlight.getFrom(), from);
@@ -55,11 +56,11 @@ class FlightPlannerApplicationTests {
 
         flightsController.addFlight(addFlightRequest);
 
-        assertTrue(flightsRepository.listFlights().size() > 0);
+        assertTrue(flightsInMemoryRepository.listFlights().size() > 0);
 
         flightsController.clearFlights();
 
-        assertEquals(0, flightsRepository.listFlights().size());
+        assertEquals(0, flightsInMemoryRepository.listFlights().size());
     }
 
 }

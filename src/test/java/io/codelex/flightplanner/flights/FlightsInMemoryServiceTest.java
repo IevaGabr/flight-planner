@@ -1,6 +1,5 @@
 package io.codelex.flightplanner.flights;
 
-import io.codelex.flightplanner.flights.domain.Flight;
 import io.codelex.flightplanner.flights.exception.DepartureAndArrivalAirportAreTheSameException;
 import io.codelex.flightplanner.flights.request.SearchFlightRequest;
 import io.codelex.flightplanner.flights.response.SearchFlightsResponse;
@@ -16,12 +15,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 
 @ExtendWith(MockitoExtension.class)
-class FlightsServiceTest {
+class FlightsInMemoryServiceTest {
 
     @Mock
-    FlightsRepository flightsRepository;
+    FlightsInMemoryRepository flightsInMemoryRepository;
     @InjectMocks
-    FlightsService flightsService;
+    FlightsInMemoryService flightsInMemoryService;
 
     @Test
     @DisplayName("Should be able to search flight")
@@ -30,10 +29,10 @@ class FlightsServiceTest {
         request.setFrom("rix");
         request.setTo("us5");
         request.setDepartureDate("2023-07-16");
-        SearchFlightsResponse mockResponse = new SearchFlightsResponse(0,0, new ArrayList<>());
-        Mockito.when(flightsRepository.searchFlights(request)).thenReturn(mockResponse);
-        SearchFlightsResponse actualResponse = flightsService.searchFlights(request);
-        Mockito.verify(flightsRepository).searchFlights(request);
+        SearchFlightsResponse mockResponse = new SearchFlightsResponse(0, 0, new ArrayList<>());
+        Mockito.when(flightsInMemoryRepository.searchFlights(request)).thenReturn(mockResponse);
+        SearchFlightsResponse actualResponse = flightsInMemoryService.searchFlights(request);
+        Mockito.verify(flightsInMemoryRepository).searchFlights(request);
         Assertions.assertEquals(0, actualResponse.getPage());
         Assertions.assertEquals(0, actualResponse.getTotalItems());
         Assertions.assertEquals(mockResponse.getItems(), actualResponse.getItems());

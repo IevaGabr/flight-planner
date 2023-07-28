@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 public class FlightsController {
 
-    private final FlightsService flightsService;
+    private FlightsService flightsService;
 
     public FlightsController(FlightsService flightsService) {
         this.flightsService = flightsService;
@@ -37,18 +37,18 @@ public class FlightsController {
             return this.flightsService.addFlight(addFlightRequest);
         } catch (DepartureAndArrivalAirportAreTheSameException | IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        } catch (FlightAlreadyExistException e){
+        } catch (FlightAlreadyExistException e) {
             throw new ResponseStatusException((HttpStatus.CONFLICT));
         }
     }
 
     @DeleteMapping("/admin-api/flights/{id}")
-    public void deleteFlight(@PathVariable("id") int id){
+    public void deleteFlight(@PathVariable("id") Long id) {
         this.flightsService.deleteFlight(id);
     }
 
-    @GetMapping ("/admin-api/flights/{id}")
-    public Flight getFlight(@PathVariable("id") int id){
+    @GetMapping("/admin-api/flights/{id}")
+    public Flight getFlight(@PathVariable("id") Long id) {
         try {
             return this.flightsService.getFlightById(id);
         } catch (NothingFoundException e) {
@@ -58,13 +58,13 @@ public class FlightsController {
 
     @GetMapping(path = "api/airports")
     @ResponseStatus(HttpStatus.OK)
-    public List<Airport> searchAirport(@RequestParam(name = "search") String phrase){
-            return this.flightsService.searchAirport(phrase);
+    public List<Airport> searchAirport(@RequestParam(name = "search") String phrase) {
+        return this.flightsService.searchAirport(phrase);
     }
 
     @PostMapping("/api/flights/search")
     @ResponseStatus(HttpStatus.OK)
-    public SearchFlightsResponse searchFlights (@Valid @RequestBody SearchFlightRequest searchFlightRequest){
+    public SearchFlightsResponse searchFlights(@Valid @RequestBody SearchFlightRequest searchFlightRequest) {
         try {
             return this.flightsService.searchFlights(searchFlightRequest);
         } catch (DepartureAndArrivalAirportAreTheSameException e) {
@@ -74,14 +74,12 @@ public class FlightsController {
 
     @GetMapping("/api/flights/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Flight searchFlightById (@PathVariable("id") int id){
+    public Flight searchFlightById(@PathVariable("id") Long id) {
         try {
             return this.flightsService.getFlightById(id);
         } catch (NothingFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
-
-
 
 }

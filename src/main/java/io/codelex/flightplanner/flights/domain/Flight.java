@@ -1,15 +1,23 @@
 package io.codelex.flightplanner.flights.domain;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
+@Entity
 public class Flight {
-private long id;
-private Airport from;
-private Airport to;
-private String carrier;
-private LocalDateTime departureTime;
-private LocalDateTime arrivalTime;
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @ManyToOne
+    @JoinColumn(name = "airportFrom")
+    private Airport from;
+    @ManyToOne
+    @JoinColumn(name = "airportTo")
+    private Airport to;
+    private String carrier;
+    private LocalDateTime departureTime;
+    private LocalDateTime arrivalTime;
 
 
     public Flight() {

@@ -1,16 +1,29 @@
 package io.codelex.flightplanner.flights.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
 import java.util.Objects;
 
+@Entity
 public class Airport {
     @NotBlank
     private String country;
     @NotBlank
     private String city;
     @NotBlank
+    @NotNull
+    @Id
     private String airport;
+    @OneToMany(mappedBy = "from")
+    private List<Flight> flightsFrom;
+
+    @OneToMany(mappedBy = "to")
+    private List<Flight> flightsTo;
 
     public Airport() {
     }
@@ -21,7 +34,7 @@ public class Airport {
         this.airport = airport;
     }
 
-    public boolean containsText(String text){
+    public boolean containsText(String text) {
         String textToSearch = text.trim().toLowerCase();
         return this.airport.toLowerCase().contains(textToSearch)
                 || this.city.toLowerCase().contains(textToSearch)
